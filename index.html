@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Diwali</title>
+<style>
+  body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background: radial-gradient(circle at top, #1a002b, #000);
+    color: white;
+    text-align: center;
+    overflow-x: hidden;
+  }
+
+  /* ===== WRAPPER ===== */
+  .wrapper {
+    position: relative;
+    padding: 8vw; /* space for all borders */
+    box-sizing: border-box;
+    max-width: 100%;
+  }
+
+  /* ===== TOP & BOTTOM BORDERS ===== */
+  .wrapper::before,
+  .wrapper::after {
+    content:"";
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 8vw;
+    background-image: url("kalash.png");
+    background-repeat: repeat-x;
+    background-size: auto 100%;
+  }
+  .wrapper::before { top: 0; }
+  .wrapper::after { bottom: 0; }
+
+  /* ===== LEFT & RIGHT BORDERS ===== */
+  .wrapper .left,
+  .wrapper .right {
+    position: absolute;
+    top: 0;
+    width: 8vw;
+    height: 100%;
+    background-image: url("kalash.png");
+    background-repeat: repeat-y;
+    background-size: 100% auto;
+  }
+  .wrapper .left { left: 0; }
+  .wrapper .right { right: 0; }
+
+  /* ===== CONTENT ===== */
+  .content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-bottom: 8vw; /* bottom border ke liye space */
+    box-sizing: border-box;
+  }
+
+  h1 {
+    font-size: clamp(3rem, 6vw, 4rem);
+    font-weight: bold;
+    color: #ffcc00;
+    text-shadow: 2px 2px 0px #ff6600,4px 4px 0px #ff3300,6px 6px 15px #ff0000;
+    animation: glow 2s infinite alternate;
+    margin-bottom: 10px;
+  }
+  @keyframes glow {
+    from { text-shadow: 2px 2px 10px #ff6600, 4px 4px 20px #ff3300; }
+    to { text-shadow: 2px 2px 20px #ffcc00, 6px 6px 40px #ff0000; }
+  }
+
+  .gif-box img { width: clamp(120px, 35vw, 220px); margin: 5px; }
+  .diyas { display:flex; justify-content:center; flex-wrap:wrap; margin-top:20px; gap:10px; }
+  .diyas img { width: clamp(70px, 10vw, 100px); }
+
+  #sender {
+    margin: 12px 0;
+    font-size: clamp(1rem,4vw,1.2rem);
+    font-weight: bold;
+    color: #ffcc00;
+    text-shadow: 2px 2px 0px #ff6600,4px 4px 0px #ff3300,6px 6px 15px #ff0000;
+    animation: glow 2s infinite alternate;
+    margin-bottom: 15px;
+  }
+
+  .name-box {
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    max-width: 450px;
+  }
+  .name-box input {
+    flex: 1 1 60%;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+    min-width: 120px;
+  }
+  .name-box button {
+    flex: 1 1 auto;
+    background: linear-gradient(45deg,#25D366,#128C7E);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    color: white;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-width: 120px;
+    transition: transform 0.2s;
+  }
+  .name-box button:hover { transform: scale(1.05); }
+  .name-box button img { width: 18px; }
+
+  canvas { position: fixed; top:0; left:0; z-index:0; }
+</style>
+</head>
+<body>
+
+<canvas id="fireworks"></canvas>
+
+<div class="wrapper">
+  <!-- Left & Right Borders -->
+  <div class="left"></div>
+  <div class="right"></div>
+
+  <!-- Content -->
+  <div class="content">
+    <div class="gif-box">
+      <img src="lakshmi.png" alt="Lakshmi Maa">
+      <img src="ganesh.png" alt="Lord Ganesh">
+    </div>
+
+    <p>इस दिवाली में यही कामना है कि<br>
+    सफलता आपके कदम चूमे<br> और
+    खुशी आपके आसपास हो।<br>
+    माता लक्ष्मी की कृपा आप पर बनी रहे।</p>
+
+    <p id="sender"></p>
+    <h1> दीपावली की हार्दिक शुभकामनाएं </h1>
+
+    <div class="diyas">
+      <img src="diya.png" alt="Diya">
+      <img src="diya.png" alt="Diya">
+      <img src="diya.png" alt="Diya">
+    </div>
+<p style="margin-top:30px;">✨ अपना नाम लिखें और अपने दोस्तों को शेयर करें ✨</p>
+
+    <div class="name-box">
+      <input type="text" id="nameInput" placeholder="अपना नाम लिखें और शेयर करें">
+      <button onclick="share()"><img src="whatsapp.png">WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Share logic
+const params = new URLSearchParams(window.location.search);
+const senderName = params.get("from");
+if(senderName){
+ document.getElementById("sender").innerHTML =
+  '<span style="color: LawnGreen;">आपको एवं आपके परिवार को <b>' + senderName + '</b> की तरफ से</span><br><br><span style="font-size: 2.5rem; color: gold;">🙏</span>';
+
+
+
+}
+function share(){
+  let name = document.getElementById("nameInput").value;
+  if(name.trim() === ""){ alert("पहले अपना नाम लिखो!"); return; }
+  let shareURL = window.location.origin + window.location.pathname + "?from=" + encodeURIComponent(name);
+  let msg = "🎆 Happy Diwali 🎆\n"+name+" ने आपके लिए एक दीपावली की हार्दिक शुभकामनाएं भेजा है: "+shareURL;
+  window.open("https://wa.me/?text="+encodeURIComponent(msg),"_blank");
+}
+
+// Fireworks
+const canvas = document.getElementById("fireworks");
+const ctx = canvas.getContext("2d");
+resize();
+window.addEventListener("resize", resize);
+let particles = [];
+function resize(){ canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+
+class Particle {
+  constructor(x,y,color){ this.x=x; this.y=y; this.color=color; this.radius=Math.random()*3+2; this.angle=Math.random()*2*Math.PI; this.speed=Math.random()*4+1.5; this.life=90; }
+  update(){ this.x+=Math.cos(this.angle)*this.speed; this.y+=Math.sin(this.angle)*this.speed+0.5; this.life--; this.radius*=0.96; }
+  draw(){ ctx.beginPath(); ctx.arc(this.x,this.y,this.radius,0,Math.PI*2); ctx.fillStyle=this.color; ctx.fill(); }
+}
+
+function createFirework(){
+  let x=Math.random()*canvas.width; let y=Math.random()*canvas.height/2;
+  let colors=["#ff0","#f0f","#0ff","#f00","#0f0","#fff"];
+  for(let i=0;i<40;i++){ particles.push(new Particle(x,y,colors[Math.floor(Math.random()*colors.length)])); }
+}
+
+function animate(){
+  ctx.fillStyle="rgba(0,0,0,0.25)"; ctx.fillRect(0,0,canvas.width,canvas.height);
+  particles.forEach((p,i)=>{ p.update(); p.draw(); if(p.life<=0) particles.splice(i,1); });
+  requestAnimationFrame(animate);
+}
+setInterval(createFirework,1300);
+animate();
+</script>
+
+</body>
+</html>
