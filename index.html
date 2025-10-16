@@ -257,7 +257,7 @@ window.addEventListener('load', () => {
 });
 
 // If autoplay blocked, enable on user interaction
-['click','auto','keydown'].forEach(ev => {
+['click','touchstart','keydown'].forEach(ev => {
   window.addEventListener(ev, () => {
     [a1, a2].forEach(a => {
       a.muted = false;
