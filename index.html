@@ -201,7 +201,7 @@ const params = new URLSearchParams(window.location.search);
 const senderName = params.get("from");
 if(senderName){
  document.getElementById("sender").innerHTML =
-  'आपको और आपके परिवार को <br><br><span style="color: LawnGreen; font-size: 2rem;"><b>' + senderName + '</b></span><br><br> की तरफ से Advance में <br><br><span style="font-size: 2.5rem; color: gold;">🙏</span>';
+  '<span style="color: LawnGreen; font-size: 2rem;"><b>' + senderName + '</b></span><br><br> की तरफ से Advance में <br><br><span style="font-size: 2.5rem; color: gold;">🙏</span>';
 }
 
 function share(){
@@ -269,6 +269,7 @@ window.addEventListener('load', () => {
 
 </body>
 </html>
+
 
 
 
