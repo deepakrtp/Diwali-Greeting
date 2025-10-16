@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Happy Diwali</title>
 <style>
   body {
@@ -14,15 +14,13 @@
     overflow-x: hidden;
   }
 
-  /* ===== WRAPPER ===== */
   .wrapper {
     position: relative;
-    padding: 8vw; /* space for all borders */
+    padding: 8vw;
     box-sizing: border-box;
     max-width: 100%;
   }
 
-  /* ===== TOP & BOTTOM BORDERS ===== */
   .wrapper::before,
   .wrapper::after {
     content:"";
@@ -37,7 +35,6 @@
   .wrapper::before { top: 0; }
   .wrapper::after { bottom: 0; }
 
-  /* ===== LEFT & RIGHT BORDERS ===== */
   .wrapper .left,
   .wrapper .right {
     position: absolute;
@@ -51,7 +48,6 @@
   .wrapper .left { left: 0; }
   .wrapper .right { right: 0; }
 
-  /* ===== CONTENT ===== */
   .content {
     position: relative;
     z-index: 1;
@@ -59,7 +55,7 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    padding-bottom: 8vw; /* bottom border ke liye space */
+    padding-bottom: 8vw;
     box-sizing: border-box;
   }
 
@@ -127,19 +123,41 @@
   .name-box button:hover { transform: scale(1.05); }
   .name-box button img { width: 18px; }
 
-  canvas { position: fixed; top:0; left:0; z-index:0; }
+  canvas { position: fixed; top:0; left:0; z-index:0; pointer-events:none; }
+
+  #autoplayHint {
+    position: fixed;
+    right: 12px;
+    bottom: 12px;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    display: none;
+    z-index: 9999;
+  }
 </style>
 </head>
 <body>
 
 <canvas id="fireworks"></canvas>
 
+<!-- 🔊 Two continuous looping audio -->
+<audio id="audio1" preload="auto" muted autoplay loop>
+  <source src="cracker3.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="audio2" preload="auto" muted autoplay loop>
+  <source src="cracker2.mp3" type="audio/mpeg">
+</audio>
+
+<div id="autoplayHint">यदि आवाज़ नहीं आ रही है तो स्क्रीन पर क्लिक करें या किसी भी बटन को दबाएं।</div>
+
 <div class="wrapper">
-  <!-- Left & Right Borders -->
   <div class="left"></div>
   <div class="right"></div>
 
-  <!-- Content -->
   <div class="content">
     <div class="gif-box">
       <img src="lakshmi.png" alt="Lakshmi Maa">
@@ -159,36 +177,25 @@
       <img src="diya.png" alt="Diya">
       <img src="diya.png" alt="Diya">
     </div>
-<p style="margin-top:30px;">✨ अपना नाम लिखें और अपने दोस्तों को शेयर करें ✨</p>
+
+    <p style="margin-top:30px;">✨ अपना नाम लिखें और अपने दोस्तों को शेयर करें ✨</p>
 
     <div class="name-box">
       <input type="text" id="nameInput" placeholder="अपना नाम लिखें और शेयर करें">
-      <button onclick="share()"><img src="whatsapp.png">WhatsApp</button>
-		 <script type="text/javascript">
-	atOptions = {
-		'key' : '77302819eeee8c55711e55ef6d189cc9',
-		'format' : 'iframe',
-		'height' : 50,
-		'width' : 320,
-		'params' : {}
-	};
-</script>
-<script type="text/javascript" src="//www.highperformanceformat.com/77302819eeee8c55711e55ef6d189cc9/invoke.js"></script>
+      <button onclick="share()"><img src="whatsapp.png" alt="wa">WhatsApp</button>
     </div>
   </div>
 </div>
 
 <script>
-// Share logic
+// ====== Sender Logic ======
 const params = new URLSearchParams(window.location.search);
 const senderName = params.get("from");
 if(senderName){
  document.getElementById("sender").innerHTML =
-  '<span style="color: LawnGreen;">आपको एवं आपके परिवार को <b>' + senderName + '</b> की तरफ से</span><br><br><span style="font-size: 2.5rem; color: gold;">🙏</span>';
-
-
-
+  '<span style="color: LawnGreen;"> <b>' + senderName + '</b> की तरफ से Advance में </span><br><br><span style="font-size: 2.5rem; color: gold;">🙏</span>';
 }
+
 function share(){
   let name = document.getElementById("nameInput").value;
   if(name.trim() === ""){ alert("पहले अपना नाम लिखो!"); return; }
@@ -197,7 +204,7 @@ function share(){
   window.open("https://wa.me/?text="+encodeURIComponent(msg),"_blank");
 }
 
-// Fireworks
+// ====== Fireworks ======
 const canvas = document.getElementById("fireworks");
 const ctx = canvas.getContext("2d");
 resize();
@@ -210,24 +217,47 @@ class Particle {
   update(){ this.x+=Math.cos(this.angle)*this.speed; this.y+=Math.sin(this.angle)*this.speed+0.5; this.life--; this.radius*=0.96; }
   draw(){ ctx.beginPath(); ctx.arc(this.x,this.y,this.radius,0,Math.PI*2); ctx.fillStyle=this.color; ctx.fill(); }
 }
-
 function createFirework(){
   let x=Math.random()*canvas.width; let y=Math.random()*canvas.height/2;
   let colors=["#ff0","#f0f","#0ff","#f00","#0f0","#fff"];
   for(let i=0;i<40;i++){ particles.push(new Particle(x,y,colors[Math.floor(Math.random()*colors.length)])); }
 }
-
 function animate(){
-  ctx.fillStyle="rgba(0,0,0,0.25)"; ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle="rgba(0,0,0,0.25)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
   particles.forEach((p,i)=>{ p.update(); p.draw(); if(p.life<=0) particles.splice(i,1); });
   requestAnimationFrame(animate);
 }
 setInterval(createFirework,1300);
 animate();
+
+// ====== Dual Audio autoplay logic ======
+const a1 = document.getElementById('audio1');
+const a2 = document.getElementById('audio2');
+const hint = document.getElementById('autoplayHint');
+
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    [a1, a2].forEach(a => {
+      a.muted = false;
+      a.volume = 0.6;
+      a.play().catch(()=> hint.style.display='block');
+    });
+  }, 1000);
+});
+
+// If autoplay blocked, enable on user interaction
+['click','touchstart','keydown'].forEach(ev => {
+  window.addEventListener(ev, () => {
+    [a1, a2].forEach(a => {
+      a.muted = false;
+      a.volume = 0.6;
+      a.play();
+    });
+    hint.style.display='none';
+  }, {once:true});
+});
 </script>
 
 </body>
 </html>
-
-
-
