@@ -201,14 +201,14 @@ const params = new URLSearchParams(window.location.search);
 const senderName = params.get("from");
 if(senderName){
  document.getElementById("sender").innerHTML =
-  '<span style="color: LawnGreen; font-size: 2rem;"><b>' + senderName + '</b></span><br><br> की तरफ से Advance में <br><br><span style="font-size: 2.5rem; color: gold;">🙏</span>';
+  '<span style="color: LawnGreen; font-size: 2rem;"><b>' + senderName + '</b></span><br><br> की तरफ से <br><br><span style="font-size: 2.5rem; color: gold;">🙏</span>';
 }
 
 function share(){
   let name = document.getElementById("nameInput").value;
   if(name.trim() === ""){ alert("पहले अपना नाम लिखो!"); return; }
   let shareURL = window.location.origin + window.location.pathname + "?from=" + encodeURIComponent(name);
-  let msg = "🎆 Happy Diwali 🎆\n"+name+" ने आपके लिए एक दीपावली की हार्दिक शुभकामनाएं भेजा है: "+shareURL;
+  let msg = "🪔🎆 Happy Diwali 🎆 \n"+name+" ने आपके लिए एक दीपावली की हार्दिक शुभकामनाएं भेजा है: "+shareURL;
   window.open("https://wa.me/?text="+encodeURIComponent(msg),"_blank");
 }
 
@@ -269,6 +269,7 @@ window.addEventListener('load', () => {
 
 </body>
 </html>
+
 
 
 
